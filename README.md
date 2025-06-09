@@ -37,8 +37,6 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-
-
 ## Init
 
 ```bash
@@ -55,7 +53,7 @@ Creating a new Next.js app in .../hello-world--nextjs--2025b/knowledge-base.
 
 Using npm.
 
-Initializing project with template: app-tw 
+Initializing project with template: app-tw
 
 
 Installing dependencies:
