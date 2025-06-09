@@ -81,3 +81,5 @@ added 340 packages, and audited 341 packages in 29s
 found 0 vulnerabilities
 Success! Created knowledge-base at .../knowledge-base
 ```
+
+https://medium.com/@rifantechguy55/setting-up-a-next-js-13-project-with-eslint-and-prettier-735c3ccfd26c

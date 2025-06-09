@@ -5,10 +5,16 @@
 /** @type {import("prettier").Config} */
 const config = {
 	// https://prettier.io/docs/en/options
-	// we have an editorconfig, no need to duplicate it
-	semi: false,
-	singleQuote: true,
-	arrowParens: 'avoid',
-}
 
-export default config
+	// we have an editorconfig, no need to duplicate it
+
+	// extra prettier config
+	arrowParens: 'avoid',
+	trailingComma: 'es5',
+	semi: true,
+	singleQuote: true,
+	jsxSingleQuote: true,
+	plugins: ['prettier-plugin-tailwindcss'],
+};
+
+export default config;
