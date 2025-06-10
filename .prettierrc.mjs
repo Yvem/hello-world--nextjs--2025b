@@ -6,9 +6,9 @@
 const config = {
 	// https://prettier.io/docs/en/options
 
-	// we have an editorconfig, no need to duplicate it
+	// 1. we have an editorconfig -> no need to duplicate it
 
-	// extra prettier config
+	// 2. extra prettier config
 	arrowParens: 'avoid',
 	trailingComma: 'es5',
 	semi: true,
