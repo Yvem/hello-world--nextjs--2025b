@@ -9,16 +9,17 @@ import { Card } from '@/ui/common/card';
 import { Upload, X, FileText } from 'lucide-react';
 
 interface KnowledgeBaseFormProps {
-	onSubmit: (formData: FormData) => Promise<any>;
+	onSubmit: (texts: Array<string>) => Promise<any>;
 }
 
 export default function KnowledgeBaseUploadForm({ onSubmit }: KnowledgeBaseFormProps) {
+	// TODO error display
+
 	const [textAreaContent, setTextAreaContent] = useState('');
 	const [files, setFiles] = useState<File[]>([]);
-	const [isSubmitting, setIsSubmitting] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
-	const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const _onFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const selectedFiles = Array.from(event.target.files || []);
 		const textFiles = selectedFiles.filter(file => file.type === 'text/plain' || file.name.endsWith('.txt') || file.name.endsWith('.md'));
 
@@ -30,6 +31,8 @@ export default function KnowledgeBaseUploadForm({ onSubmit }: KnowledgeBaseFormP
 			});
 		}
 
+		// TODO duplicate file detection
+
 		setFiles(prev => [...prev, ...textFiles]);
 	};
 
@@ -39,28 +42,20 @@ export default function KnowledgeBaseUploadForm({ onSubmit }: KnowledgeBaseFormP
 
 	const _onSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setIsSubmitting(true);
 
 		try {
-			const formData = new FormData();
-			formData.append('textContent', textAreaContent);
+			const filesContent = await Promise.all(files.map(file => file.text()));
 
-			files.forEach((file, index) => {
-				formData.append(`file_${index}`, file);
-			});
+			const texts = [textAreaContent, ...filesContent];
 
-			console.log(`XXX `, formData);
-			await onSubmit(formData);
-
-			// TODO switch tab
+			console.log(`XXX `, texts);
+			onSubmit(texts);
 		} catch (error) {
 			console.error({
 				title: 'Error',
 				description: 'Failed to process knowledge base data',
 				variant: 'destructive',
 			});
-		} finally {
-			setIsSubmitting(false);
 		}
 	};
 
@@ -74,7 +69,7 @@ export default function KnowledgeBaseUploadForm({ onSubmit }: KnowledgeBaseFormP
 				</div>
 
 				<div>
-					<input ref={fileInputRef} type='file' multiple accept='.txt,.md,text/plain' onChange={handleFileUpload} className='hidden' />
+					<input ref={fileInputRef} type='file' multiple accept='.txt,.md,text/plain' onChange={_onFileInputChange} className='hidden' />
 
 					<Button type='button' variant='outline' onClick={() => fileInputRef.current?.click()} className='mb-4'>
 						<Upload className='mr-2 h-4 w-4' />
@@ -102,10 +97,14 @@ export default function KnowledgeBaseUploadForm({ onSubmit }: KnowledgeBaseFormP
 					)}
 				</div>
 
-				<Button type='submit' className='bg-teal-600 hover:bg-teal-700' disabled={isSubmitting || (!textAreaContent && files.length === 0)}>
-					{isSubmitting ? 'Processing...' : 'Next'}
+				<Button type='submit' className='bg-teal-600 hover:bg-teal-700' disabled={!textAreaContent && files.reduce((acc, file) => acc + file.size, 0) === 0}>
+					Next
 				</Button>
 			</form>
+
+			<Button className='bg-teal-600 hover:bg-teal-700' disabled={!textAreaContent && files.reduce((acc, file) => acc + file.size, 0) === 0}>
+				Reset
+			</Button>
 		</div>
 	);
 }

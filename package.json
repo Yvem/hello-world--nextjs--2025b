@@ -27,14 +27,18 @@
 		"eslint": "^9",
 		"eslint-config-next": "^15",
 		"eslint-config-prettier": "^10",
+		"limit-once": "^0.16",
 		"lucide-react": "^0.513",
+		"openai": "^5",
 		"prettier": "^3",
 		"prettier-plugin-tailwindcss": "^0.6",
 		"react-markdown": "^10",
 		"remark-gfm": "^4",
 		"tailwind-merge": "^3",
 		"tailwindcss": "^4",
-		"typescript": "^5"
+		"tiny-invariant": "^1",
+		"typescript": "^5",
+		"zod": "^3"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
