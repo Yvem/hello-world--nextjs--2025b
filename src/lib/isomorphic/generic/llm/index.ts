@@ -12,9 +12,12 @@ import { RECOMMENDED_UNICODE_NORMALIZATION } from '@/lib/isomorphic/generic/norm
 const MARKER_BEGIN = '~#BEGIN#~';
 const MARKER_END = '~#END#~';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type PRERECORDED_OPENAI_API_RESPONSE_FOR_DEV = any;
+
 /////////////////////////////////////////////////
 
-async function promptToTextOutput(client: OpenAI, input: Conversation, _fake_response?: Awaited<ReturnType<typeof client.responses.create>>) {
+async function promptToTextOutput(client: OpenAI, input: Conversation, _fake_response?: PRERECORDED_OPENAI_API_RESPONSE_FOR_DEV) {
 	const response = await (_fake_response ||
 		client.responses.create({
 			model: 'gpt-4o-mini', // XXX
@@ -42,7 +45,7 @@ async function promptToTextOutput(client: OpenAI, input: Conversation, _fake_res
 	return content.normalize(RECOMMENDED_UNICODE_NORMALIZATION).trim();
 }
 
-async function promptToStructuredJsonOutput(client: OpenAI, input: Conversation, zodObject: ZodType, _fake_response?: Awaited<ReturnType<typeof client.responses.parse>>) {
+async function promptToStructuredJsonOutput(client: OpenAI, input: Conversation, zodObject: ZodType, _fake_response?: PRERECORDED_OPENAI_API_RESPONSE_FOR_DEV) {
 	// TODO 1D auto wrap + unwrap arrays
 
 	const response = await (_fake_response ||
@@ -75,4 +78,4 @@ async function promptToStructuredJsonOutput(client: OpenAI, input: Conversation,
 
 /////////////////////////////////////////////////
 
-export { MARKER_BEGIN, MARKER_END, promptToTextOutput, promptToStructuredJsonOutput };
+export { MARKER_BEGIN, MARKER_END, promptToTextOutput, promptToStructuredJsonOutput, type PRERECORDED_OPENAI_API_RESPONSE_FOR_DEV };

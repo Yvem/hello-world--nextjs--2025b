@@ -2,12 +2,9 @@ import OpenAI from 'openai';
 
 import { normalizeMultiLinesText } from '@/lib/isomorphic/generic/normalizers/string/index';
 
-import { promptToTextOutput, promptToStructuredJsonOutput, MARKER_BEGIN, MARKER_END } from '@/lib/isomorphic/generic/llm/index';
+import { promptToTextOutput, promptToStructuredJsonOutput, MARKER_BEGIN, MARKER_END, PRERECORDED_OPENAI_API_RESPONSE_FOR_DEV } from '@/lib/isomorphic/generic/llm/index';
 
 import { ZReviewableKnowledgeBaseSections, type ReviewableKnowledgeBaseSections } from './types';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PRERECORDED_OPENAI_API_RESPONSE_FOR_DEV = any;
 
 /////////////////////////////////////////////////
 
