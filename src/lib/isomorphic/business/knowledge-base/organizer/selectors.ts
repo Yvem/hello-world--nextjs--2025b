@@ -16,6 +16,33 @@ export function isStep1Complete(state: State): boolean {
 	return false;
 }
 
+export function isStep2Complete(state: State): boolean {
+	return !!state.extractedSectionsForReview;
+}
+
+export function isStep2Displayable(state: State): boolean {
+	if (state.ↆsectionsExtractionPromise) {
+		return true;
+	}
+
+	if (state.extractedSectionsForReview) {
+		assert(!state.ↆsectionsExtractionPromise && state.inputTextCleanedByAI && state.extractedSectionsForReview, `Step2 state should be coherent!`);
+		return true;
+	}
+
+	return false;
+}
+
+export function isStep3Displayable(state: State): boolean {
+	return isStep2Complete(state);
+}
+
+export function getRawInputText(state: State): string {
+	assert(state.inputFormTextsConcatenatedNormalized);
+
+	return state.inputFormTextsConcatenatedNormalized;
+}
+
 export function getExtractedStructureAsMarkdown(state: State): string {
 	assert(isStep1Complete(state));
 
@@ -31,27 +58,4 @@ ${section.excerpt}
 	`
 		)
 		.join('\n');
-}
-
-export function isStep2Available(state: State): boolean {
-	if (state.ↆsectionsExtractionPromise) {
-		return true;
-	}
-
-	if (state.extractedSectionsForReview) {
-		assert(!state.ↆsectionsExtractionPromise && state.inputTextCleanedByAI && state.extractedSectionsForReview, `Step2 state should be coherent!`);
-		return true;
-	}
-
-	return false;
-}
-
-export function isStep3Available(state: State): boolean {
-	return false; // not implemented
-}
-
-export function getRawInputText(state: State): string {
-	assert(state.inputFormTextsConcatenatedNormalized);
-
-	return state.inputFormTextsConcatenatedNormalized;
 }

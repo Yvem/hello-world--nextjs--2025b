@@ -23,10 +23,10 @@ export default function Page() {
 				// always allowed
 				break;
 			case 'step2':
-				if (!State.isStep2Available(state)) return;
+				if (!State.isStep2Displayable(state)) return;
 				break;
 			case 'step3':
-				if (!State.isStep3Available(state)) return;
+				if (!State.isStep3Displayable(state)) return;
 				break;
 			default:
 				throw new Error('Wrong target tab!');
@@ -46,7 +46,7 @@ export default function Page() {
 
 				result.then(
 					result => {
-						setTimeout(() => setState(state => State.onExtractionSuccess(state, result)), 10);
+						setTimeout(() => setState(state => State.onExtractionSuccess(state, result)), 100);
 					},
 					err => {
 						console.error(`XXX `, err);
@@ -144,7 +144,7 @@ function TabSelector({ state, onTabClick }: { state: State.State; onTabClick: (t
 		<div className='relative mb-8 flex items-center justify-between'>
 			{/* Tab 1 - Data Input */}
 			<div className={`flex flex-1 cursor-pointer items-center space-x-4 p-4 transition-all ${activeTab === 'step1' || State.isStep1Complete(state) ? 'text-teal-600' : 'text-gray-600'}`} onClick={() => onTabClick('step1')}>
-				<div className={`flex h-12 w-12 items-center justify-center rounded-full font-semibold text-white ${activeTab === 'step1' || State.isStep1Complete(state) ? 'bg-teal-600' : 'bg-gray-600'}`}>{State.isStep2Available(state) && activeTab !== 'step1' ? '✓' : '01'}</div>
+				<div className={`flex h-12 w-12 items-center justify-center rounded-full font-semibold text-white ${activeTab === 'step1' || State.isStep1Complete(state) ? 'bg-teal-600' : 'bg-gray-600'}`}>{State.isStep2Displayable(state) && activeTab !== 'step1' ? '✓' : '01'}</div>
 				<div className='flex-1'>
 					<h3 className='text-lg font-semibold'>Data Input</h3>
 					<p className='text-sm text-gray-500'>Provide your KB raw data</p>
@@ -154,8 +154,8 @@ function TabSelector({ state, onTabClick }: { state: State.State; onTabClick: (t
 			<ArrowSeparator />
 
 			{/* Tab 2 - Markdown Preview */}
-			<div className={`flex flex-1 cursor-pointer items-center space-x-4 transition-all ${activeTab === 'step2' ? 'text-teal-600' : 'text-gray-400'}`} onClick={() => onTabClick('step2')}>
-				<div className={`flex h-12 w-12 items-center justify-center rounded-full font-semibold text-white ${activeTab === 'step2' ? 'bg-teal-600' : 'bg-gray-400'}`}>{State.isStep3Available(state) && activeTab === 'step3' ? '✓' : '02'}</div>
+			<div className={`flex flex-1 cursor-pointer items-center space-x-4 transition-all ${activeTab === 'step2' || State.isStep2Complete(state) ? 'text-teal-600' : 'text-gray-400'}`} onClick={() => onTabClick('step2')}>
+				<div className={`flex h-12 w-12 items-center justify-center rounded-full font-semibold text-white ${activeTab === 'step2' || State.isStep2Complete(state) ? 'bg-teal-600' : 'bg-gray-400'}`}>{State.isStep3Displayable(state) && activeTab === 'step3' ? '✓' : '02'}</div>
 				<div className='flex-1'>
 					<h3 className='text-lg font-semibold'>Review</h3>
 					<p className='text-sm text-gray-500'>Review the extracted structure</p>
