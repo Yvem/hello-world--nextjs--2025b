@@ -6,6 +6,9 @@ import { promptToTextOutput, promptToStructuredJsonOutput, MARKER_BEGIN, MARKER_
 
 import { ZReviewableKnowledgeBaseSections, type ReviewableKnowledgeBaseSections } from './types';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type PRERECORDED_OPENAI_API_RESPONSE_FOR_DEV = any;
+
 /////////////////////////////////////////////////
 
 interface ExtractedStructure {
@@ -13,7 +16,7 @@ interface ExtractedStructure {
 	sections: ReviewableKnowledgeBaseSections;
 }
 
-async function extractStructure(client: OpenAI, input: string, _fake_responses_chain: Array<any> = []): Promise<ExtractedStructure> {
+async function extractStructure(client: OpenAI, input: string, _fake_responses_chain: Array<PRERECORDED_OPENAI_API_RESPONSE_FOR_DEV> = []): Promise<ExtractedStructure> {
 	const improved_concatenated_input_2_improved = await promptToTextOutput(
 		client,
 		[
@@ -177,7 +180,7 @@ interface FilterAndImproveSectionInput {
 	topic: string;
 	topicDetails: string;
 }
-async function filterAndImproveSection(client: OpenAI, input: FilterAndImproveSectionInput, _fake_responses_chain: Array<any> = []): Promise<ImprovedKnowledgeBaseSection> {
+async function filterAndImproveSection(client: OpenAI, input: FilterAndImproveSectionInput, _fake_responses_chain: Array<PRERECORDED_OPENAI_API_RESPONSE_FOR_DEV> = []): Promise<ImprovedKnowledgeBaseSection> {
 	const relevant_kb_content = await promptToTextOutput(
 		client,
 		[
