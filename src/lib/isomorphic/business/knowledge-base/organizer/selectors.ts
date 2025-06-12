@@ -16,6 +16,23 @@ export function isStep1Complete(state: State): boolean {
 	return false;
 }
 
+export function getExtractedStructureAsMarkdown(state: State): string {
+	assert(isStep1Complete(state));
+
+	return state
+		.extractedSectionsForReview!.map(
+			section => `
+## ${section.title}
+
+> ${section.subtitle}
+
+${section.excerpt}
+
+	`
+		)
+		.join('\n');
+}
+
 export function isStep2Available(state: State): boolean {
 	if (state.ↆsectionsExtractionPromise) {
 		return true;

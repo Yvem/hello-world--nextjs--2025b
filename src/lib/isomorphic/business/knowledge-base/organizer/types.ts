@@ -11,7 +11,7 @@ export const ZReviewableKnowledgeBaseSections = z.object({
 	sections: z.array(ZReviewableKnowledgeBaseSection),
 });
 
-export type ReviewableKnowledgeBaseSections = z.infer<typeof ZReviewableKnowledgeBaseSections>;
+export type ReviewableKnowledgeBaseSections = Array<z.infer<typeof ZReviewableKnowledgeBaseSection>>;
 
 export interface State {
 	/////// step 1
@@ -19,7 +19,7 @@ export interface State {
 	inputFormTextsConcatenatedNormalized: undefined | string;
 
 	/////// step 2
-	ↆsectionsExtractionPromise: undefined | Promise<void>; // if present, the query is in progress
+	ↆsectionsExtractionPromise: undefined | Promise<ReviewableKnowledgeBaseSections>; // to be used with use()
 	extractedSectionsForReview: undefined | ReviewableKnowledgeBaseSections;
 	inputTextCleanedByAI: undefined | string; // intermediate output (will be needed in step 3)
 

@@ -54,12 +54,12 @@ export function onInputFormSubmit(state: State, texts: Array<string>): State {
 	return state;
 }
 
-export function onExtractionInitiated(state: State, request: Promise<void>): State {
+export function onExtractionInitiated(state: State, request: Promise<ExtractedStructure>): State {
 	assert(isStep1Complete(state));
 
 	return {
 		...state,
-		ↆsectionsExtractionPromise: request,
+		ↆsectionsExtractionPromise: request.then(res => res.sections),
 		activeTab: 'step2',
 	};
 }
@@ -67,7 +67,7 @@ export function onExtractionInitiated(state: State, request: Promise<void>): Sta
 export function onExtractionSuccess(state: State, result: ExtractedStructure): State {
 	state = {
 		...state,
-		ↆsectionsExtractionPromise: undefined,
+		//ↆsectionsExtractionPromise: undefined,
 		extractedSectionsForReview: result.sections,
 		inputTextCleanedByAI: result.raw_cleaned,
 	};
