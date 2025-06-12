@@ -3,5 +3,3 @@ export interface KnowledgeBaseSection {
 	subtitle: string;
 	content: string;
 }
-
-export type KnowledgeBase = Array<KnowledgeBaseSection>;

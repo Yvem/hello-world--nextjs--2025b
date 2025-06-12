@@ -9,7 +9,7 @@ import { Card } from '@/ui/common/card';
 import { Upload, X, FileText } from 'lucide-react';
 
 interface KnowledgeBaseFormProps {
-	onSubmit: (texts: Array<string>) => Promise<any>;
+	onSubmit: (texts: Array<string>) => void;
 }
 
 export default function KnowledgeBaseUploadForm({ onSubmit }: KnowledgeBaseFormProps) {
@@ -45,17 +45,10 @@ export default function KnowledgeBaseUploadForm({ onSubmit }: KnowledgeBaseFormP
 
 		try {
 			const filesContent = await Promise.all(files.map(file => file.text()));
-
 			const texts = [textAreaContent, ...filesContent];
-
-			console.log(`XXX `, texts);
 			onSubmit(texts);
 		} catch (error) {
-			console.error({
-				title: 'Error',
-				description: 'Failed to process knowledge base data',
-				variant: 'destructive',
-			});
+			console.error(error);
 		}
 	};
 
@@ -64,6 +57,10 @@ export default function KnowledgeBaseUploadForm({ onSubmit }: KnowledgeBaseFormP
 			<form onSubmit={_onSubmit} className='space-y-6'>
 				<div>
 					<h3 className='mb-4 text-lg font-semibold text-gray-900'>Provide your KB raw data</h3>
+
+					<Button className='bg-teal-600 hover:bg-teal-700' onClick={() => setTextAreaContent(`Our new employee onboarding process starts the first Monday of every month, beginning with a mandatory virtual orientation session from 9 AM to 12 PM AEST. New hires will receive an email with their login credentials for the HR portal and our internal collaboration tool, Slack, 48 hours prior to their start date. It's crucial they complete their tax forms and set up direct deposit in the HR portal within the first three days. After orientation, each new hire will be introduced to their team lead who will guide them through specific departmental training and project assignments. We also offer a mentorship program where new employees are paired with experienced colleagues for the first six months to help them settle in and understand our company culture. Benefits enrollment, including health insurance and 401k, must be completed by the end of their first week. For IT support, new employees should contact helpdesk@ourcompany.com or call extension 5555. They will be provisioned with a laptop and necessary software by the end of their first day, provided they have completed the pre-onboarding IT survey.`)}>
+						Insert Demo Data
+					</Button>
 
 					<Textarea value={textAreaContent} onChange={e => setTextAreaContent(e.target.value)} placeholder='Enter your knowledge base content here...' className='min-h-[300px] resize-none' />
 				</div>

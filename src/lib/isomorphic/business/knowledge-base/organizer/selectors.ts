@@ -43,19 +43,9 @@ export function getRawInputText(state: State): string {
 	return state.inputFormTextsConcatenatedNormalized;
 }
 
-export function getExtractedStructureAsMarkdown(state: State): string {
-	assert(isStep1Complete(state));
+export function getSectionsForReview(state: State) {
+	assert(state.extractedSectionsForReview, `getSectionsForReview(): Step2 state should be coherent!`);
+	assert(state.improvedContentForReview, `getSectionsForReview(): Step3 state should be coherent!`);
 
-	return state
-		.extractedSectionsForReview!.map(
-			section => `
-## ${section.title}
-
-> ${section.subtitle}
-
-${section.excerpt}
-
-	`
-		)
-		.join('\n');
+	return state.extractedSectionsForReview;
 }

@@ -17,6 +17,7 @@
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3",
+		"@radix-ui/react-collapsible": "^1",
 		"@radix-ui/react-slot": "^1",
 		"@tailwindcss/postcss": "^4",
 		"@types/node": "^22",

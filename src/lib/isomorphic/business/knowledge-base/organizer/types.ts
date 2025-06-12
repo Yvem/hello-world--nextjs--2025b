@@ -13,6 +13,11 @@ export const ZReviewableKnowledgeBaseSections = z.object({
 
 export type ReviewableKnowledgeBaseSections = Array<z.infer<typeof ZReviewableKnowledgeBaseSection>>;
 
+export interface ReviewableContent {
+	originalContent: string;
+	improvedContent: string;
+}
+
 export interface State {
 	/////// step 1
 	// input
@@ -24,7 +29,11 @@ export interface State {
 	inputTextCleanedByAI: undefined | string; // intermediate output (will be needed in step 3)
 
 	/////// step 3
-	// TODO coming soon
+	improvedContentForReview:
+		| undefined
+		| Array<{
+				ↆcontentImprovementPromise: Promise<ReviewableContent>;
+		  }>;
 
 	/////// meta
 	activeTab: 'step1' | 'step2' | 'step3';

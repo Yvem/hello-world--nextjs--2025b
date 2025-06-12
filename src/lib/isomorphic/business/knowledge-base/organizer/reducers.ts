@@ -1,5 +1,5 @@
 import { normalizeMultiLinesText } from '@/lib/isomorphic/generic/normalizers/string/index';
-import { type State } from './types';
+import { type State, type ReviewableContent } from './types';
 import assert from 'tiny-invariant';
 
 import { isStep1Complete } from './selectors';
@@ -15,6 +15,8 @@ export function create(): State {
 		ↆsectionsExtractionPromise: undefined,
 		extractedSectionsForReview: undefined,
 		inputTextCleanedByAI: undefined,
+
+		improvedContentForReview: undefined,
 
 		activeTab: 'step1',
 	};
@@ -38,7 +40,6 @@ function _resetStep2(state: State): State {
 }
 
 export function onInputFormSubmit(state: State, texts: Array<string>): State {
-
 	const inputFormTextsConcatenatedNormalized = texts
 		.map(normalizeMultiLinesText)
 		.filter(t => !!t)
@@ -75,8 +76,20 @@ export function onExtractionSuccess(state: State, result: ExtractedStructure): S
 	return _resetStep3(state);
 }
 
-export function setActiveTab(state: State, targetTab: State['activeTab']): State {
+export function onImprovementInitiated(state: State, requests: Array<Promise<ReviewableContent>>): State {
+	assert(isStep1Complete(state));
 
+	return {
+		...state,
+		improvedContentForReview: requests.map(r => {
+			return {
+				ↆcontentImprovementPromise: r,
+			};
+		}),
+	};
+}
+
+export function setActiveTab(state: State, targetTab: State['activeTab']): State {
 	if (state.activeTab === targetTab) return state;
 
 	return {

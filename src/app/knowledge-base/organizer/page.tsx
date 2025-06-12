@@ -1,21 +1,20 @@
 'use client';
 
+import assert from 'tiny-invariant';
+
 import React, { Suspense, useState, use } from 'react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/ui/common/card';
+import { Button } from '@/ui/common/button';
+import { Card, CardContent } from '@/ui/common/card';
 import * as State from '@/lib/isomorphic/business/knowledge-base/organizer/index';
 import InputForm from '@/ui/knowledge-base/organizer/1-form/index';
-import { extractStructure } from '@/ui/knowledge-base/organizer/server-functions';
-import MarkdownRenderer from '@/ui/common/markdown-renderer';
-import { Button } from '@/ui/common/button';
-import assert from 'tiny-invariant';
+import { extractStructure, improveSection } from '@/ui/knowledge-base/organizer/server-functions';
+import DiffWidgetList from '@/ui/knowledge-base/organizer/3-content-review/diff-widget-list';
 
 export default function Page() {
 	const [state, setState] = useState(State.create());
 
 	const activeTab = State.getActiveTab(state);
-
-	const diffData = [];
 
 	function onTabClick(targetTab: State.State['activeTab']) {
 		switch (targetTab) {
@@ -35,8 +34,7 @@ export default function Page() {
 		setState(state => State.setActiveTab(state, targetTab));
 	}
 
-	const onInputFormSubmit = async (texts: Array<string>) => {
-
+	function onSubmitRawData(texts: Array<string>) {
 		try {
 			setState(state => {
 				state = State.onInputFormSubmit(state, texts);
@@ -49,7 +47,7 @@ export default function Page() {
 						setTimeout(() => setState(state => State.onExtractionSuccess(state, result)), 100);
 					},
 					err => {
-						console.error(`XXX `, err);
+						console.error('Error extracting structure', err);
 					}
 				);
 
@@ -60,7 +58,29 @@ export default function Page() {
 			console.error('Error submitting form:', error);
 			throw error;
 		}
-	};
+	}
+
+	function onApproveStructure() {
+		setState(state => {
+			state = State.onImprovementInitiated(
+				state,
+				state.extractedSectionsForReview!.map(section =>
+					improveSection({
+						topic: section.title,
+						topicDetails: section.subtitle,
+						rawContent: state.inputTextCleanedByAI!,
+					}).then(improved => {
+						return {
+							improvedContent: improved.content,
+							originalContent: improved._originalContent,
+						};
+					})
+				)
+			);
+			state = State.setActiveTab(state, 'step3');
+			return state;
+		});
+	}
 
 	return (
 		<div className='min-h-screen bg-gray-50 p-4'>
@@ -78,10 +98,25 @@ export default function Page() {
 							{/* Tab Content */}
 							<div className='mt-8'>
 								<div className={activeTab === 'step1' ? '' : 'hidden' /* hide it instead of unmounting it to not lose its state */}>
-									<InputForm onSubmit={onInputFormSubmit} />
+									<InputForm onSubmit={onSubmitRawData} />
 								</div>
-								{activeTab === 'step2' && <Step2 state={state} onButtonClick={(b: 'next' | 'retry') => (b === 'next' ? onTabClick('step3') : onInputFormSubmit([state.inputFormTextsConcatenatedNormalized!]))} />}
-								{activeTab === 'step3' && <div diffs={diffData} />}
+								{activeTab === 'step2' && <Step2 state={state} onButtonClick={(b: 'next' | 'retry') => (b === 'next' ? onApproveStructure() : onSubmitRawData([state.inputFormTextsConcatenatedNormalized!]))} />}
+								{activeTab === 'step3' && (
+									<DiffWidgetList
+										diffs={State.getSectionsForReview(state).map((review, index) => {
+											return {
+												id: String(index),
+												title: review.title,
+												ↆdiff: state.improvedContentForReview![index].ↆcontentImprovementPromise.then(c => {
+													return {
+														oldText: c.originalContent,
+														newText: c.improvedContent,
+													};
+												}),
+											};
+										})}
+									/>
+								)}
 							</div>
 						</div>
 					</CardContent>
